@@ -77,4 +77,40 @@ def show_coloured_graph(colour):
         print()
 
 
-show_coloured_graph(colour_graph(create_adjacency_matrix(get_data())))
+def create_matching_solving_matrix(colour, adjacency_matrix):
+    maximum = max(colour)
+    if maximum != 2:
+        print("Не можливо побудувати досконале паросполучення")
+        exit(1)
+    counter = 0
+    for y in range(len(colour)):
+        if colour[y] == 1:
+            counter += 1
+    if counter != len(adjacency_matrix) / 2:
+        print("Не можливо побудувати досконале паросполучення")
+        exit(1)
+
+    colour_ordered = []
+    for x in range(1, 3):
+        group_colour = []
+        for y in range(len(colour)):
+            if colour[y] == x:
+                group_colour.append(y)
+        colour_ordered.append(group_colour)
+    matrix = ['*'] * (int(len(adjacency_matrix) / 2))
+    for x in range(int(len(adjacency_matrix) / 2)):
+        matrix[x] = ['*'] * (int(len(adjacency_matrix) / 2))
+    for i in range(int(len(adjacency_matrix) / 2)):
+        for j in range(int(len(adjacency_matrix) / 2)):
+            if adjacency_matrix[colour_ordered[0][i]][colour_ordered[1][j]] == 1:
+                matrix[i][j] = 0
+            else:
+                matrix[i][j] = 'x'
+    return colour_ordered, matrix
+
+
+adjacencyMatrix = create_adjacency_matrix(get_data())
+myColour = colour_graph(adjacencyMatrix)
+show_coloured_graph(myColour)
+colourOrdered, myMatrix = create_matching_solving_matrix(myColour, adjacencyMatrix)
+print(colourOrdered)
