@@ -109,8 +109,33 @@ def create_matching_solving_matrix(colour, adjacency_matrix):
     return colour_ordered, matrix
 
 
+def search_all_matching_matrix(matching_matrix_skeleton, row=0):
+    if row == len(matching_matrix_skeleton):
+        print_matrix(matching_matrix_skeleton)
+    for x in range(len(matching_matrix_skeleton)):
+        is_added_already = False
+        for y in range(0, row):
+            if matching_matrix_skeleton[y][x] == 1:
+                is_added_already = True
+                break
+        if not is_added_already and matching_matrix_skeleton[row][x] != 'x':
+            matching_matrix_skeleton[row][x] = 1
+            search_all_matching_matrix(matching_matrix_skeleton, row + 1)
+            matching_matrix_skeleton[row][x] = 0
+
+
+def print_matrix(matrix):
+    for i in matrix:
+        for j in i:
+            print(j, end=" ")
+        print()
+    print()
+
+
 adjacencyMatrix = create_adjacency_matrix(get_data())
 myColour = colour_graph(adjacencyMatrix)
 show_coloured_graph(myColour)
+print("Колір 1 відповідає за позначення біля рядків")
+print("Колір 2 за позначення біля стовпців")
 colourOrdered, myMatrix = create_matching_solving_matrix(myColour, adjacencyMatrix)
-print(colourOrdered)
+search_all_matching_matrix(myMatrix)
